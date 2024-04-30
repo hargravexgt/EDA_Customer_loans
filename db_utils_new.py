@@ -74,7 +74,7 @@ class CSV_DF:
         df = pd.read_csv(file_path)
         return df
 
-class DataTransformer:
+class DataTransform:
     def __init__(self):
         pass
 
@@ -133,9 +133,8 @@ class DataTransformer:
             numeric_part = ''.join(monthstring.split()[:1])
             return float(numeric_part)
         dataframe[column_name] = dataframe[column_name].apply(monthstring_to_float64)
-    
 
-class Null_Handler():
+class DataFrameTransform:
     def __init__(self):
         pass
 
@@ -150,10 +149,6 @@ class Null_Handler():
 
     def impute_mode(self, dataframe, column_name):
         dataframe[column_name] = dataframe[column_name].fillna(dataframe[column_name].mode().iloc[0])
-
-class Skew_Handler():
-    def __init__(self):
-        pass
 
     def log_transformation(self, dataframe, column_name):
         dataframe[column_name] = dataframe[column_name].map(lambda i: np.log(i) if i > 0 else 0)
@@ -203,15 +198,19 @@ class Plotter:
 
     def PDF_plot_with_averages(self, dataframe, column_name):
 
-        sns.histplot(dataframe[column_name], kde=True, stat='density')
+        try:
+            sns.histplot(dataframe[column_name], kde=True, stat='density')
 
-        pyplot.xlabel('Values')
-        pyplot.ylabel('Probability')
-        pyplot.title('Probability Density Function')
-        pyplot.show()
-        print(f"The mode of the distribution is {dataframe[column_name].mode()[0]}")
-        print(f"The mean of the distribution is {dataframe[column_name].mean()}")
-        print(f"The median of the distribution is {dataframe[column_name].median()}")
+            pyplot.xlabel(f'Values of {column_name}')
+            pyplot.ylabel('Probability')
+            pyplot.title('Probability Density Function')
+            pyplot.show()
+            print(f"The mode of the distribution is {dataframe[column_name].mode()[0]}")
+            print(f"The mean of the distribution is {dataframe[column_name].mean()}")
+            print(f"The median of the distribution is {dataframe[column_name].median()}")
+
+        except TypeError:
+            raise TypeError('Not numeric data so cannot be plotted with PDF')
 
 class DataFrameInfo:
     def __init__(self):
