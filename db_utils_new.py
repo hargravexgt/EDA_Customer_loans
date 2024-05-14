@@ -245,3 +245,11 @@ class DataFrameInfo:
     def get_numeric_columns(self, dataframe):
         numeric_df = dataframe.select_dtypes(include='number')
         return numeric_df
+    
+    def get_cols_with_nulls(self, dataframe):
+        
+        null_sums = dataframe.isna().sum()
+        with_nulls = null_sums[null_sums > 0]
+        cols_with_nulls_ls = list(with_nulls.keys())
+
+        return cols_with_nulls_ls
